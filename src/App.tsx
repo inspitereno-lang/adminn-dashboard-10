@@ -6,7 +6,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "@/components/layout/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import Employees from "@/pages/Employees";
-import Attendance from "@/pages/Attendance";
+import RouteManagement from "@/pages/RouteManagement";
+import LiveTracking from "@/pages/LiveTracking";
+import ShopVisits from "@/pages/ShopVisits";
+import StockReports from "@/pages/StockReports";
+import MissedShops from "@/pages/MissedShops";
 import Expenses from "@/pages/Expenses";
 import Reports from "@/pages/Reports";
 import NotFound from "@/pages/NotFound";
@@ -41,7 +45,11 @@ const App = () => (
             >
               <Route path="/" element={<Dashboard />} />
               <Route path="/employees" element={<Employees />} />
-              <Route path="/attendance" element={<Attendance />} />
+              <Route path="/routes" element={<RouteManagement />} />
+              <Route path="/tracking" element={<LiveTracking />} />
+              <Route path="/visits" element={<ShopVisits />} />
+              <Route path="/stock" element={<StockReports />} />
+              <Route path="/missed" element={<MissedShops />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/reports" element={<Reports />} />
             </Route>

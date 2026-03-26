@@ -1,167 +1,262 @@
 import { useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Users, 
+  IndianRupee, 
+  Map, 
+  Store, 
+  CheckCircle2,
+  Calendar
+} from "lucide-react";
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  LineChart, 
+  Line, 
+  PieChart, 
+  Pie, 
+  Cell 
+} from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, TrendingDown, Users, IndianRupee } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
-const attendanceData = [
-  { day: "Mon", present: 40, absent: 8 },
-  { day: "Tue", present: 42, absent: 6 },
-  { day: "Wed", present: 38, absent: 10 },
-  { day: "Thu", present: 44, absent: 4 },
-  { day: "Fri", present: 36, absent: 12 },
-  { day: "Sat", present: 20, absent: 28 },
+const routeEfficiencyData = [
+  { name: "South Delhi", efficiency: 94 },
+  { name: "Gurgaon", efficiency: 82 },
+  { name: "Noida", efficiency: 88 },
+  { name: "Dwarka", efficiency: 91 },
+  { name: "Rohini", efficiency: 76 },
 ];
 
-const expenseData = [
-  { week: "Week 1", amount: 24000 },
-  { week: "Week 2", amount: 31000 },
-  { week: "Week 3", amount: 18000 },
-  { week: "Week 4", amount: 28000 },
+const performanceData = [
+  { agent: "Ravi Kumar", rating: 98, visits: 145 },
+  { agent: "Priya Sharma", rating: 95, visits: 132 },
+  { agent: "Amit Verma", rating: 92, visits: 128 },
+  { agent: "Suresh Patel", rating: 89, visits: 110 },
 ];
 
-const categoryData = [
-  { name: "Travel", value: 35, color: "hsl(213,80%,50%)" },
-  { name: "Meals", value: 20, color: "hsl(145,60%,42%)" },
-  { name: "Equipment", value: 25, color: "hsl(38,90%,55%)" },
-  { name: "Supplies", value: 12, color: "hsl(280,60%,50%)" },
-  { name: "Other", value: 8, color: "hsl(215,10%,50%)" },
+const coverageData = [
+  { name: "Visited", value: 85, color: "hsl(145,60%,42%)" },
+  { name: "Skipped", value: 10, color: "hsl(0,70%,55%)" },
+  { name: "Not Open", value: 5, color: "hsl(38,90%,55%)" },
 ];
 
 const Reports = () => {
   const [period, setPeriod] = useState("week");
-  const [empFilter, setEmpFilter] = useState("all");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Reports</h2>
-          <p className="text-sm text-muted-foreground">Attendance & expense analytics</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Analytics & Reports</h1>
+          <p className="text-sm text-muted-foreground mt-1">Route efficiency and field performance insights</p>
         </div>
         <div className="flex gap-2">
-          <Select value={empFilter} onValueChange={setEmpFilter}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="Employee" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Staff</SelectItem>
-              <SelectItem value="ravi">Ravi Kumar</SelectItem>
-              <SelectItem value="priya">Priya Sharma</SelectItem>
-              <SelectItem value="amit">Amit Verma</SelectItem>
-            </SelectContent>
-          </Select>
           <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-36">
+              <Calendar size={14} className="mr-2 opacity-50" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="week">This Week</SelectItem>
               <SelectItem value="month">This Month</SelectItem>
-              <SelectItem value="quarter">Quarter</SelectItem>
+              <SelectItem value="quarter">Quarterly</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-card rounded-lg border border-border shadow-card p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Users size={14} className="text-primary" />
-            <span className="text-xs text-muted-foreground">Avg Attendance</span>
-          </div>
-          <p className="text-xl font-bold text-foreground">92%</p>
-          <div className="flex items-center gap-1 text-xs text-success mt-1">
-            <TrendingUp size={12} /> +3% from last week
-          </div>
-        </div>
-        <div className="bg-card rounded-lg border border-border shadow-card p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <IndianRupee size={14} className="text-primary" />
-            <span className="text-xs text-muted-foreground">Total Expenses</span>
-          </div>
-          <p className="text-xl font-bold text-foreground">₹1.01L</p>
-          <div className="flex items-center gap-1 text-xs text-destructive mt-1">
-            <TrendingDown size={12} /> -8% from last week
-          </div>
-        </div>
-        <div className="bg-card rounded-lg border border-border shadow-card p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-muted-foreground">Late Check-ins</span>
-          </div>
-          <p className="text-xl font-bold text-foreground">12</p>
-          <p className="text-xs text-muted-foreground mt-1">Avg 2/day</p>
-        </div>
-        <div className="bg-card rounded-lg border border-border shadow-card p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-muted-foreground">Avg Hours/Day</span>
-          </div>
-          <p className="text-xl font-bold text-foreground">8.5h</p>
-          <div className="flex items-center gap-1 text-xs text-success mt-1">
-            <TrendingUp size={12} /> On target
-          </div>
-        </div>
+      {/* High Level Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="shadow-sm border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Overall Coverage</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">85.4%</div>
+            <div className="mt-2">
+              <Progress value={85.4} className="h-1.5" />
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+              <TrendingUp size={10} className="text-success" /> +2.1% from last {period}
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card className="shadow-sm border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Route Efficiency</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">91.2%</div>
+            <p className="text-[10px] text-muted-foreground mt-1">Avg time per shop: 12 mins</p>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Agent Performance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4.8/5.0</div>
+            <p className="text-[10px] text-muted-foreground mt-1">Based on 1.2k total visits</p>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Field Expenses</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">₹84.2k</div>
+            <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
+              <TrendingDown size={10} className="text-destructive" /> -12% optimized routes
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Charts */}
-      <div className="grid md:grid-cols-2 gap-5">
-        <div className="bg-card rounded-lg border border-border shadow-card p-5">
-          <h3 className="text-sm font-medium text-foreground mb-1">Attendance Overview</h3>
-          <p className="text-xs text-muted-foreground mb-4">Present vs absent by day</p>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={attendanceData} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(214,20%,90%)" />
-              <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="hsl(215,10%,50%)" />
-              <YAxis tick={{ fontSize: 11 }} stroke="hsl(215,10%,50%)" />
-              <Tooltip contentStyle={{ borderRadius: 8, fontSize: 12, border: "1px solid hsl(214,20%,90%)" }} />
-              <Bar dataKey="present" fill="hsl(213,80%,50%)" radius={[4, 4, 0, 0]} name="Present" />
-              <Bar dataKey="absent" fill="hsl(0,70%,55%)" radius={[4, 4, 0, 0]} name="Absent" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Route Efficiency Chart */}
+        <Card className="lg:col-span-2 shadow-card border-border">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Map size={18} className="text-primary" /> Route-wise Efficiency
+            </CardTitle>
+            <CardDescription>Performance comparison across main regional routes.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={routeEfficiencyData} layout="vertical" margin={{ left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="hsl(214,20%,95%)" />
+                <XAxis type="number" domain={[0, 100]} hide />
+                <YAxis 
+                  dataKey="name" 
+                  type="category" 
+                  tick={{ fontSize: 13, fontWeight: 500 }} 
+                  axisLine={false} 
+                  tickLine={false} 
+                />
+                <Tooltip 
+                  cursor={{ fill: 'transparent' }} 
+                  contentStyle={{ borderRadius: 12, border: '1px solid hsl(214,20%,90%)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} 
+                />
+                <Bar 
+                  dataKey="efficiency" 
+                  fill="hsl(213,80%,50%)" 
+                  radius={[0, 6, 6, 0]} 
+                  barSize={32}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        <div className="bg-card rounded-lg border border-border shadow-card p-5">
-          <h3 className="text-sm font-medium text-foreground mb-1">Expense Trend</h3>
-          <p className="text-xs text-muted-foreground mb-4">Weekly spending pattern</p>
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={expenseData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(214,20%,90%)" />
-              <XAxis dataKey="week" tick={{ fontSize: 11 }} stroke="hsl(215,10%,50%)" />
-              <YAxis tick={{ fontSize: 11 }} stroke="hsl(215,10%,50%)" tickFormatter={v => `₹${v / 1000}k`} />
-              <Tooltip contentStyle={{ borderRadius: 8, fontSize: 12, border: "1px solid hsl(214,20%,90%)" }} formatter={(v: number) => [`₹${v.toLocaleString()}`, "Amount"]} />
-              <Line type="monotone" dataKey="amount" stroke="hsl(213,80%,50%)" strokeWidth={2.5} dot={{ r: 5, fill: "hsl(213,80%,50%)", stroke: "hsl(0,0%,100%)", strokeWidth: 2 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Expense by Category */}
-      <div className="bg-card rounded-lg border border-border shadow-card p-5">
-        <h3 className="text-sm font-medium text-foreground mb-1">Expenses by Category</h3>
-        <p className="text-xs text-muted-foreground mb-4">Breakdown of spending</p>
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          <ResponsiveContainer width={180} height={180}>
-            <PieChart>
-              <Pie data={categoryData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" strokeWidth={2} stroke="hsl(0,0%,100%)">
-                {categoryData.map((entry, i) => (
-                  <Cell key={i} fill={entry.color} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="space-y-2.5 flex-1">
-            {categoryData.map((cat, i) => (
-              <div key={i} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: cat.color }} />
-                  <span className="text-foreground">{cat.name}</span>
-                </div>
-                <span className="text-muted-foreground font-medium">{cat.value}%</span>
+        {/* Coverage Percentage */}
+        <Card className="shadow-card border-border flex flex-col">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Store size={18} className="text-primary" /> Coverage Details
+            </CardTitle>
+            <CardDescription>Breakdown of shop visit outcomes.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col justify-center pb-8">
+            <div className="relative h-48 mb-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie 
+                    data={coverageData} 
+                    cx="50%" 
+                    cy="50%" 
+                    innerRadius={60} 
+                    outerRadius={80} 
+                    dataKey="value" 
+                    paddingAngle={5}
+                    stroke="none"
+                  >
+                    {coverageData.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-2xl font-bold">85%</span>
+                <span className="text-[10px] text-muted-foreground uppercase font-semibold">Visited</span>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+            
+            <div className="space-y-3">
+              {coverageData.map((item, i) => (
+                <div key={i} className="flex items-center justify-between text-xs px-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="font-medium text-foreground/80">{item.name}</span>
+                  </div>
+                  <span className="font-bold">{item.value}%</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Employee Performance Table */}
+      <Card className="shadow-card border-border">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <CheckCircle2 size={18} className="text-primary" /> Employee Performance Benchmarks
+          </CardTitle>
+          <CardDescription>Ranking based on visit reliability and data accuracy.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-muted/40 font-medium text-muted-foreground border-y border-border/50">
+                <tr>
+                  <th className="px-6 py-4">Employee Name</th>
+                  <th className="px-6 py-4 text-center">Total Visits</th>
+                  <th className="px-6 py-4 text-center">Efficiency Score</th>
+                  <th className="px-6 py-4 text-right">Trend</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/50">
+                {performanceData.map((p, i) => (
+                   <tr key={i} className="hover:bg-muted/20 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center font-bold text-[10px]">
+                            {p.agent.split(" ").map(n=>n[0]).join("")}
+                          </div>
+                          <span className="font-semibold">{p.agent}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center font-medium">{p.visits}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1.5 items-center">
+                          <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
+                            <div className="h-full bg-primary" style={{ width: `${p.rating}%` }} />
+                          </div>
+                          <span className="text-[10px] font-bold">{p.rating}%</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right text-success font-bold text-xs">
+                        <TrendingUp size={12} className="inline mr-1" /> +2%
+                      </td>
+                   </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

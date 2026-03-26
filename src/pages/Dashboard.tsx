@@ -1,4 +1,4 @@
-import { Users, UserCheck, IndianRupee, MapPin, TrendingUp, Clock, Bell, ChevronRight } from "lucide-react";
+import { Users, UserCheck, Map, Store, AlertTriangle, Package, TrendingUp, Clock, Bell, ChevronRight } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 import mapImage from "@/assets/map-placeholder.jpg";
 
@@ -47,12 +47,13 @@ const Dashboard = () => (
       ))}
     </div>
 
-    {/* Stats Grid */}
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-      <StatCard title="Total Staff" value={48} icon={Users} subtitle="3 new this month" />
-      <StatCard title="Active Today" value={36} icon={UserCheck} subtitle="75% attendance" />
-      <StatCard title="Today's Expenses" value="₹12,450" icon={IndianRupee} subtitle="5 pending" />
-      <StatCard title="On Field" value={22} icon={MapPin} subtitle="14 in office" />
+    {/* Stats Grid - 5 Modules requested */}
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-5 lg:gap-4">
+      <StatCard title="Active Employees" value={36} icon={UserCheck} subtitle="Out of 48 total" />
+      <StatCard title="Routes in Progress" value={12} icon={Map} subtitle="4 completed" />
+      <StatCard title="Shops Covered" value={145} icon={Store} subtitle="Today's total" />
+      <StatCard title="Missed Shops" value={8} icon={AlertTriangle} subtitle="Requires review" />
+      <StatCard title="Stock Entries" value={856} icon={Package} subtitle="Items recorded today" />
     </div>
 
     {/* Map */}

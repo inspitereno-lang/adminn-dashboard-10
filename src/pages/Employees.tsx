@@ -121,8 +121,9 @@ const Employees = () => {
                     <button className="p-1 rounded hover:bg-muted"><MoreVertical size={14} className="text-muted-foreground" /></button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>View Attendance</DropdownMenuItem>
+                    <DropdownMenuItem>Assign Route</DropdownMenuItem>
+                    <DropdownMenuItem>Edit Details</DropdownMenuItem>
+                    <DropdownMenuItem>View Performance</DropdownMenuItem>
                     <DropdownMenuItem className="text-destructive">Deactivate</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
