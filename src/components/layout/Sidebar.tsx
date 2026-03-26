@@ -10,7 +10,8 @@ import {
   Receipt, 
   BarChart3, 
   LogOut, 
-  LogIn 
+  LogIn,
+  CalendarCheck
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ const navItems = [
   { to: "/stock", icon: Box, label: "Stock Reports" },
   { to: "/missed", icon: AlertTriangle, label: "Missed Shops" },
   { to: "/expenses", icon: Receipt, label: "Expenses" },
+  { to: "/attendance", icon: CalendarCheck, label: "Attendance" },
   { to: "/reports", icon: BarChart3, label: "Analytics" },
 ];
 
@@ -39,7 +41,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card min-h-screen p-4">
+    <aside className="hidden sm:flex flex-col w-64 border-r border-border bg-card min-h-screen p-4">
       <div className="px-3 py-6 mb-2">
         <h1 className="text-2xl font-bold tracking-tight text-primary leading-tight">Field Connect</h1>
         <p className="text-xs text-muted-foreground mt-1 font-medium tracking-wide uppercase">Admin Portal</p>

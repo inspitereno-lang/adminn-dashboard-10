@@ -15,7 +15,8 @@ import {
   Box, 
   AlertTriangle, 
   Receipt, 
-  BarChart3 
+  BarChart3,
+  CalendarCheck
 } from "lucide-react";
 
 /**
@@ -36,7 +37,8 @@ const moreNavItems = [
   { to: "/stock", icon: Box, label: "Stock" },
   { to: "/missed", icon: AlertTriangle, label: "Missed" },
   { to: "/expenses", icon: Receipt, label: "Expenses" },
-  { to: "/reports", icon: BarChart3, label: "Analytics" },
+  { to: "/attendance", icon: CalendarCheck, label: "Presence" },
+  { to: "/reports", icon: BarChart3, label: "Stats" },
 ];
 
 const MobileNav = () => {
@@ -50,7 +52,7 @@ const MobileNav = () => {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 shadow-lg pb-safe">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 shadow-lg pb-safe">
       <div className="flex justify-between items-center py-2 px-2">
         {mainNavItems.map(({ to, icon: Icon, label }) => {
           const isActive = location.pathname === to;

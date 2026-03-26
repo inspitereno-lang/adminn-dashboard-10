@@ -47,7 +47,7 @@ const Login = () => {
               <ShieldCheck className="h-9 w-9 text-white" />
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-extrabold tracking-tight text-slate-900 capitalize">
+              <CardTitle className="text-3xl font-bold tracking-tight text-slate-900 capitalize">
                 Field Connect
               </CardTitle>
               <CardDescription className="text-base text-slate-500 font-medium">

@@ -13,6 +13,7 @@ import StockReports from "@/pages/StockReports";
 import MissedShops from "@/pages/MissedShops";
 import Expenses from "@/pages/Expenses";
 import Reports from "@/pages/Reports";
+import Attendance from "@/pages/Attendance";
 import NotFound from "@/pages/NotFound";
 import Login from "@/pages/Login";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/visits" element={<ShopVisits />} />
               <Route path="/stock" element={<StockReports />} />
               <Route path="/missed" element={<MissedShops />} />
+              <Route path="/attendance" element={<Attendance />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/reports" element={<Reports />} />
             </Route>

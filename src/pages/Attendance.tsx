@@ -2,24 +2,28 @@ import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Clock, MapPin, ChevronRight } from "lucide-react";
+import { Clock, MapPin, ChevronRight, User, Filter, Download, CheckCircle2, XCircle, AlertCircle, Coffee, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const attendanceData = [
-  { name: "Ravi Kumar", role: "Field Agent", checkIn: "9:02 AM", checkOut: "6:10 PM", status: "Present", location: "Connaught Place", hours: "9h 08m" },
-  { name: "Priya Sharma", role: "Supervisor", checkIn: "9:15 AM", checkOut: "5:45 PM", status: "Present", location: "Sector 18, Noida", hours: "8h 30m" },
-  { name: "Amit Verma", role: "Field Agent", checkIn: "9:30 AM", checkOut: "—", status: "Present", location: "MG Road", hours: "Working..." },
-  { name: "Neha Singh", role: "Driver", checkIn: "—", checkOut: "—", status: "Absent", location: "—", hours: "—" },
-  { name: "Suresh Patel", role: "Field Agent", checkIn: "10:05 AM", checkOut: "—", status: "Late", location: "Rajouri Garden", hours: "Working..." },
-  { name: "Vikram Tiwari", role: "Field Agent", checkIn: "8:55 AM", checkOut: "6:00 PM", status: "Present", location: "Karol Bagh", hours: "9h 05m" },
-  { name: "Anjali Gupta", role: "Driver", checkIn: "9:00 AM", checkOut: "5:30 PM", status: "Present", location: "Saket", hours: "8h 30m" },
-  { name: "Meena Devi", role: "Supervisor", checkIn: "—", checkOut: "—", status: "Leave", location: "—", hours: "—" },
+  { id: 1, name: "Ravi Kumar", role: "Field Agent", checkIn: "9:02 AM", checkOut: "6:10 PM", status: "Present", location: "Connaught Place", hours: "9h 08m" },
+  { id: 2, name: "Priya Sharma", role: "Supervisor", checkIn: "9:15 AM", checkOut: "5:45 PM", status: "Present", location: "Sector 18, Noida", hours: "8h 30m" },
+  { id: 3, name: "Amit Verma", role: "Field Agent", checkIn: "9:30 AM", checkOut: "—", status: "Present", location: "MG Road", hours: "Working..." },
+  { id: 4, name: "Neha Singh", role: "Driver", checkIn: "—", checkOut: "—", status: "Absent", location: "—", hours: "—" },
+  { id: 5, name: "Suresh Patel", role: "Field Agent", checkIn: "10:05 AM", checkOut: "—", status: "Late", location: "Rajouri Garden", hours: "Working..." },
+  { id: 6, name: "Vikram Tiwari", role: "Field Agent", checkIn: "8:55 AM", checkOut: "6:00 PM", status: "Present", location: "Karol Bagh", hours: "9h 05m" },
+  { id: 7, name: "Anjali Gupta", role: "Driver", checkIn: "9:00 AM", checkOut: "5:30 PM", status: "Present", location: "Saket", hours: "8h 30m" },
+  { id: 8, name: "Meena Devi", role: "Supervisor", checkIn: "—", checkOut: "—", status: "Leave", location: "—", hours: "—" },
 ];
 
-const statusConfig: Record<string, { bg: string; text: string; dot: string }> = {
-  Present: { bg: "bg-success/10", text: "text-success", dot: "bg-success" },
-  Absent: { bg: "bg-destructive/10", text: "text-destructive", dot: "bg-destructive" },
-  Late: { bg: "bg-warning/10", text: "text-warning", dot: "bg-warning" },
-  Leave: { bg: "bg-muted", text: "text-muted-foreground", dot: "bg-muted-foreground" },
+const statusConfig: Record<string, { bg: string; text: string; dot: string; icon: any }> = {
+  Present: { bg: "bg-success/10", text: "text-success", dot: "bg-success", icon: CheckCircle2 },
+  Absent: { bg: "bg-destructive/10", text: "text-destructive", dot: "bg-destructive", icon: XCircle },
+  Late: { bg: "bg-warning/10", text: "text-warning", dot: "bg-warning", icon: AlertCircle },
+  Leave: { bg: "bg-muted", text: "text-muted-foreground", dot: "bg-muted-foreground", icon: Coffee },
 };
 
 const Attendance = () => {
@@ -33,113 +37,188 @@ const Attendance = () => {
     return statusMatch && empMatch;
   });
 
-  const presentCount = attendanceData.filter(a => a.status === "Present").length;
-  const absentCount = attendanceData.filter(a => a.status === "Absent").length;
-  const lateCount = attendanceData.filter(a => a.status === "Late").length;
+  const stats = [
+    { label: "Total Workforce", value: attendanceData.length, color: "bg-primary/10 text-primary", icon: User },
+    { label: "On Duty", value: attendanceData.filter(a => a.status === "Present").length, color: "bg-success/10 text-success", icon: CheckCircle2 },
+    { label: "Missed Shift", value: attendanceData.filter(a => a.status === "Absent").length, color: "bg-destructive/10 text-destructive", icon: XCircle },
+    { label: "Delayed", value: attendanceData.filter(a => a.status === "Late").length, color: "bg-warning/10 text-warning", icon: AlertCircle },
+  ];
+
+  const handleExport = () => {
+    toast.promise(new Promise(res => setTimeout(res, 1500)), {
+      loading: "Compiling attendance records...",
+      success: "Attendance report exported successfully",
+      error: "Export failed"
+    });
+  };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h2 className="text-xl font-semibold text-foreground">Attendance</h2>
-        <p className="text-sm text-muted-foreground">Track daily check-ins and hours</p>
+    <div className="space-y-6 pb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl sm:text-3xl font-bold text-foreground tracking-tight uppercase">Workforce Attendance</h2>
+          <p className="text-xs sm:text-sm font-bold text-muted-foreground mt-1 flex items-center gap-2 uppercase tracking-tighter">
+            Real-time compliance tracking and labor analytics
+          </p>
+        </div>
+        <Button onClick={handleExport} className="h-10 sm:h-11 px-4 sm:px-6 rounded-2xl shadow-lg shadow-primary/20 font-bold gap-2 text-sm w-full sm:w-auto">
+          <Download size={18} /> Export Log
+        </Button>
       </div>
 
-      {/* Summary Bar */}
-      <div className="grid grid-cols-4 gap-2">
-        {[
-          { label: "Total", value: attendanceData.length, color: "bg-primary/10 text-primary" },
-          { label: "Present", value: presentCount, color: "bg-success/10 text-success" },
-          { label: "Absent", value: absentCount, color: "bg-destructive/10 text-destructive" },
-          { label: "Late", value: lateCount, color: "bg-warning/10 text-warning" },
-        ].map((s, i) => (
-          <div key={i} className={`rounded-lg p-3 text-center ${s.color}`}>
-            <p className="text-lg font-bold">{s.value}</p>
-            <p className="text-[10px] font-medium">{s.label}</p>
-          </div>
+      {/* Summary Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {stats.map((s, i) => (
+          <Card key={i} className="border-border shadow-2xl rounded-3xl overflow-hidden bg-card/50 backdrop-blur-sm">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className={cn("p-3 rounded-2xl", s.color)}>
+                <s.icon size={20} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{s.value}</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.label}</p>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
-      <div className="grid md:grid-cols-[280px_1fr] gap-5">
-        {/* Calendar */}
-        <div className="bg-card rounded-lg border border-border shadow-card p-3">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className={cn("pointer-events-auto")}
-          />
-          <div className="mt-3 pt-3 border-t border-border px-2">
-            <p className="text-xs font-medium text-foreground mb-2">Legend</p>
-            <div className="space-y-1.5 text-[11px]">
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-success" /> Present</div>
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-destructive" /> Absent</div>
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-warning" /> Late</div>
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-muted-foreground" /> On Leave</div>
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 sm:gap-6 items-start">
+        {/* Sidebar Controls */}
+        <div className="space-y-6">
+          <Card className="border-border shadow-2xl rounded-3xl overflow-hidden p-4">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-2xl border-none p-0"
+            />
+          </Card>
+
+          <Card className="border-border shadow-2xl rounded-3xl overflow-hidden p-5 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Advanced Filters</h3>
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase text-muted-foreground/70">Compliance Status</label>
+                <Select value={filter} onValueChange={setFilter}>
+                  <SelectTrigger className="h-10 rounded-xl border-border bg-muted/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="all">Full Spectrum</SelectItem>
+                    <SelectItem value="present">Active Duty</SelectItem>
+                    <SelectItem value="absent">Absence Log</SelectItem>
+                    <SelectItem value="late">Tardy Entries</SelectItem>
+                    <SelectItem value="leave">Approve Leaves</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase text-muted-foreground/70">Personnel Search</label>
+                <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
+                  <SelectTrigger className="h-10 rounded-xl border-border bg-muted/30">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="all">All Personnel</SelectItem>
+                    {attendanceData.map(a => (
+                      <SelectItem key={a.id} value={a.name}>{a.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
+            
+            <div className="pt-4 border-t border-border/50">
+               <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Key</h4>
+               <div className="grid grid-cols-2 gap-2">
+                 {Object.entries(statusConfig).map(([key, cfg]) => (
+                   <div key={key} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-tight">
+                     <span className={cn("w-1.5 h-1.5 rounded-full", cfg.dot)} />
+                     {key}
+                   </div>
+                 ))}
+               </div>
+            </div>
+          </Card>
         </div>
 
-        {/* Attendance List */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Select value={filter} onValueChange={setFilter}>
-              <SelectTrigger className="w-full sm:w-36">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="present">Present</SelectItem>
-                <SelectItem value="absent">Absent</SelectItem>
-                <SelectItem value="late">Late</SelectItem>
-                <SelectItem value="leave">Leave</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={employeeFilter} onValueChange={setEmployeeFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="All Employees" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Employees</SelectItem>
-                {attendanceData.map(a => (
-                  <SelectItem key={a.name} value={a.name}>{a.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Dynamic Attendance List */}
+        <Card className="border-border shadow-2xl rounded-3xl overflow-hidden">
+          <div className="p-6 border-b border-border/50 bg-muted/20 flex items-center justify-between">
+            <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+              <Filter size={16} className="text-primary" /> Log View: {date?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </h3>
+            <Badge variant="outline" className="text-[10px] font-bold uppercase px-3 py-1 rounded-xl bg-background border-border shadow-sm">
+              {filtered.length} Entries Found
+            </Badge>
           </div>
-
-          <div className="space-y-2">
-            {filtered.map((item, i) => {
-              const cfg = statusConfig[item.status] || statusConfig.Present;
-              return (
-                <div key={i} className="bg-card rounded-lg border border-border shadow-card p-4 hover:shadow-card-hover transition-shadow">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${cfg.bg} ${cfg.text}`}>
-                        {item.name.split(" ").map(n => n[0]).join("")}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">{item.role}</p>
-                      </div>
-                    </div>
-                    <span className={cn("text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1.5", cfg.bg, cfg.text)}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                      {item.status}
-                    </span>
+          <CardContent className="p-0">
+            <div className="divide-y divide-border/30">
+              {filtered.length === 0 ? (
+                <div className="p-20 text-center space-y-3">
+                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto opacity-20">
+                    <Search size={32} />
                   </div>
-                  {item.status !== "Absent" && item.status !== "Leave" && (
-                    <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1.5"><Clock size={12} /> In: {item.checkIn}</span>
-                      <span className="flex items-center gap-1.5"><Clock size={12} /> Out: {item.checkOut}</span>
-                      <span className="flex items-center gap-1.5"><MapPin size={12} /> {item.location}</span>
-                      <span className="font-medium text-foreground ml-auto">{item.hours}</span>
-                    </div>
-                  )}
+                  <p className="text-sm font-bold uppercase text-muted-foreground tracking-widest">No matching records</p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              ) : (
+                filtered.map((item) => {
+                  const cfg = statusConfig[item.status] || statusConfig.Present;
+                  const Icon = cfg.icon;
+                  return (
+                    <div key={item.id} className="p-5 hover:bg-primary/5 transition-all group border-l-4 border-l-transparent hover:border-l-primary cursor-pointer">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 min-w-0">
+                          <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center text-xs font-bold shadow-lg shadow-black/5 shrink-0 transition-transform group-hover:scale-105", cfg.bg, cfg.text)}>
+                            {item.name.split(" ").map(n => n[0]).join("")}
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-sm text-foreground uppercase tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+                              {item.name}
+                              <Badge variant="outline" className="text-[8px] font-bold opacity-40 py-0 h-4 border-muted-foreground/20">{item.role}</Badge>
+                            </h4>
+                            <div className="flex items-center gap-4 mt-1">
+                               <span className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground/70 uppercase">
+                                 <MapPin size={10} className="text-primary/50" /> {item.location || "N/A"}
+                               </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col items-end gap-2 shrink-0">
+                          <Badge className={cn("rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest gap-1.5 border-none shadow-sm", cfg.bg, cfg.text)}>
+                            <Icon size={12} strokeWidth={3} />
+                            {item.status}
+                          </Badge>
+                          {item.status !== "Absent" && item.status !== "Leave" && (
+                             <span className="text-[10px] font-bold text-foreground flex items-center gap-1">
+                               {item.hours} <Clock size={10} className="text-muted-foreground/50" />
+                             </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {item.status !== "Absent" && item.status !== "Leave" && (
+                        <div className="mt-4 grid grid-cols-2 gap-4">
+                          <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Entry Stamp</p>
+                            <p className="text-xs font-bold text-foreground uppercase">{item.checkIn}</p>
+                          </div>
+                          <div className="bg-muted/30 rounded-xl p-3 border border-border/50">
+                            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Exit Stamp</p>
+                            <p className="text-xs font-bold text-foreground uppercase">{item.checkOut}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
